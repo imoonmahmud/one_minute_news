@@ -1,5 +1,6 @@
 from scraper import get_treanding_articles, get_article_text
 from database import init_db, already_posted, mark_posted
+from rewrite import rewrite
 
 def run():
     conn = init_db()
@@ -11,10 +12,11 @@ def run():
             continue
 
         body = get_article_text(art['link'])
-        print("Would post:", art['title'])
-        print("Body preview:", body[:120])
-        print()
+        post_text = rewrite(art['title'], body)
 
+        print("--- Draft Post ---")
+        print(post_text)
+        print()
 
         mark_posted(conn, art['link'], art['title'])
 

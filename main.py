@@ -1,4 +1,4 @@
-from scraper import get_treanding_articles
+from scraper import get_treanding_articles, get_article_text
 from database import init_db, already_posted, mark_posted
 
 def run():
@@ -10,9 +10,13 @@ def run():
             print("Already posted, skipping:", art['title'])
             continue
 
+        body = get_article_text(art['link'])
         print("Would post:", art['title'])
-        mark_posted(conn, art['link'], art['title'])
+        print("Body preview:", body[:120])
+        print()
 
+
+        mark_posted(conn, art['link'], art['title'])
 
 
 if __name__ == '__main__':

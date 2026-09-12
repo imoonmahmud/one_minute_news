@@ -1,4 +1,6 @@
 from playwright.sync_api import sync_playwright
+import requests
+from bs4 import BeautifulSoup
 
 def get_treanding_articles():
     url = "https://www.prothomalo.com/"
@@ -34,3 +36,13 @@ def get_treanding_articles():
         browser.close()
 
     return articles
+
+
+def get_article_text(url: str) -> str:
+    headers = {"User-Agent": "Mozilla/5.0"}
+    resp = requests.get(url, headers=headers, timeout=15)
+    soup = BeautifulSoup(resp.text, "html.parser")
+
+    paragraphs = soup.find_all("p")
+    body_text = " ".join(p.get_text().strip() for p in paragraphs)
+    return body_text

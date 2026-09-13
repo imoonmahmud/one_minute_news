@@ -46,3 +46,15 @@ def get_article_text(url: str) -> str:
     paragraphs = soup.find_all("p")
     body_text = " ".join(p.get_text().strip() for p in paragraphs)
     return body_text
+
+
+def get_article_image(url: str) -> str | None:
+    headers = {"User-Agent": "Mozilla/5.0"}
+    resp = requests.get(url, headers=headers, timeout=15)
+    soup = BeautifulSoup(resp.text, "html.parser")
+
+    og_image = soup.find("meta", property="og:image")
+    if og_image:
+        url = og_image["content"]
+        return url.split("&overlay=")[0]
+    return None
